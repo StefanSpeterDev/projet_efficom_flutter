@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "853582503829",
+    "firebase_url": "https://projet-efficom.firebaseio.com",
+    "project_id": "projet-efficom",
+    "storage_bucket": "projet-efficom.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:853582503829:android:ebf00ed06ca38b998ca09c",
+        "android_client_info": {
+          "package_name": "com.example.projet_efficom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "853582503829-gml2cc5vk8uo3ce158e64rlsm237bfpg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBftBUgxTvLwK1vtWpKjIceL63XHMswZEc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "853582503829-gml2cc5vk8uo3ce158e64rlsm237bfpg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
