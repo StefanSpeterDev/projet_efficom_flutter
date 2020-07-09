@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:projet_efficom/authentication_bloc/authentication_bloc.dart';
 import 'package:projet_efficom/authentication_bloc/bloc.dart';
+import 'package:projet_efficom/login/login_page.dart';
 import 'package:projet_efficom/pages/homepage.dart';
 import 'package:projet_efficom/repositories/user_repository.dart';
 import 'package:projet_efficom/splash_screen.dart';
@@ -24,6 +25,9 @@ class App extends StatelessWidget {
           }
           if(state is AuthenticationSuccess){
             return HomeScreen(name: state.displayName);
+          }
+          if(state is AuthenticationFailure){
+            return LoginScreen(userRepository: _userRepository);
           }
           return Container();
         },
