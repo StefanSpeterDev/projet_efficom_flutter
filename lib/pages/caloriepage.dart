@@ -20,15 +20,15 @@ class CaloriePage extends StatefulWidget {
 class _CaloriePageState extends State<CaloriePage> {
   int calorieBase;
   int calorieActivite;
-  int sportingFrenquency;
+  int radioSelector;
   double weight;
   double yearOld;
-  double size = 170.0;
   bool sexe = false;
-  Map mapSportingFrenquency = {
-    "Faible": 0,
-    "Modere": 1,
-    "Forte": 2,
+  double size = 170.0;
+  Map mapActivite = {
+    0: "Faible",
+    1: "Modere",
+    2: "Forte"
   };
 
   @override
@@ -57,7 +57,7 @@ class _CaloriePageState extends State<CaloriePage> {
               child: new Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  genTextStyle(
+                  gentextWithStyle(
                       "Remplisser tous les champs pour obtenir votre besoin journalier en caloris"),
                   new Card(
                     elevation: 10.0,
@@ -68,7 +68,7 @@ class _CaloriePageState extends State<CaloriePage> {
                         new Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
-                            genTextStyle("Femme", color: Colors.pink),
+                            gentextWithStyle("Femme", color: Colors.pink),
                             new Switch(
                                 value: sexe,
                                 inactiveTrackColor: Colors.pink,
@@ -78,14 +78,14 @@ class _CaloriePageState extends State<CaloriePage> {
                                     sexe = b;
                                   });
                                 }),
-                            genTextStyle("Homme", color: Colors.blue)
+                            gentextWithStyle("Homme", color: Colors.blue)
                           ],
                         ),
                         padding(),
                         // Date de naissance
                         new RaisedButton(
                             color: setColor(),
-                            child: genTextStyle(
+                            child: gentextWithStyle(
                                 (yearOld == null)
                                     ? "Appuyer pour rentrer votre"
                                     : "Votre age est de : ${yearOld.toInt()} ans",
@@ -93,7 +93,7 @@ class _CaloriePageState extends State<CaloriePage> {
                             onPressed: (() => showPicker())),
                         // Slider pour la gestion de la taille
                         padding(),
-                        genTextStyle("Votre taille est de : ${size.toInt()} cm",
+                        gentextWithStyle("Votre taille est de : ${size.toInt()} cm",
                             color: setColor()),
                         padding(),
                         new Slider(
@@ -120,10 +120,10 @@ class _CaloriePageState extends State<CaloriePage> {
                               labelText: "Entrez votre poids en kilos."),
                         ),
                         padding(),
-                        genTextStyle("Quelle est votre activité sportive?",
+                        gentextWithStyle("Quelle est votre activité sportive?",
                             color: setColor()),
                         padding(),
-                        //rowRadio(),
+                        rowRadio(),
                         padding()
                       ],
                     ),
@@ -131,8 +131,8 @@ class _CaloriePageState extends State<CaloriePage> {
                   padding(),
                   new RaisedButton(
                     color: setColor(),
-                    child: genTextStyle("Calculer", color: Colors.white),
-                    onPressed: calculNbrCaloris,
+                    child: gentextWithStyle("Calculer", color: Colors.white),
+                    onPressed: calculNbrCalories,
                   )
                 ],
               ))),
@@ -170,30 +170,30 @@ class _CaloriePageState extends State<CaloriePage> {
   }
 
   // Permet d'uniformiser tous les champs textes
-  Text genTextStyle(String data, {color: Colors.black, fontSize: 15.0}) {
+  Text gentextWithStyle(String data, {color: Colors.black, fontSize: 15.0}) {
     return new Text(data,
         textAlign: TextAlign.center,
         style: new TextStyle(color: color, fontSize: fontSize));
   }
 
-
-  // génération des boutons radios
+  // Permet de générer les boutons radios
   Row rowRadio() {
     List<Widget> l = [];
-    mapSportingFrenquency.forEach((key, value) {
+    mapActivite.forEach((key, value) {
       Column column = new Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           new Radio(
               activeColor: setColor(),
               value: key,
-              groupValue: sportingFrenquency,
+              groupValue: radioSelector,
               onChanged: (Object i) {
                 setState(() {
-                  sportingFrenquency = i;
+                  radioSelector = i;
+
                 });
               }),
-          genTextStyle(value, color: setColor())
+          gentextWithStyle(value, color: setColor())
         ],
       );
       l.add(column);
@@ -206,23 +206,16 @@ class _CaloriePageState extends State<CaloriePage> {
 
 
 
-  void calculNbrCaloris() {
-    if (yearOld != null && weight != null && sportingFrenquency != null) {
+
+  void calculNbrCalories() {
+    if (yearOld != null && weight != null && radioSelector != null) {
       //Calculer
       if (sexe) {
-        calorieBase = (66.4730 +
-                (13.7516 * weight) +
-                (5.0033 * size) -
-                (6.7550 * yearOld))
-            .toInt();
+        calorieBase = (66.4730 + (13.7516 * weight) + (5.0033 * size) - (6.7550 * yearOld)).toInt();
       } else {
-        calorieBase = (655.0955 +
-                (9.5634 * weight) +
-                (1.8496 * size) -
-                (4.6756 * yearOld))
-            .toInt();
+        calorieBase = (655.0955 + (9.5634 * weight) + (1.8496 * size) - (4.6756 * yearOld)).toInt();
       }
-      switch (sportingFrenquency) {
+      switch(radioSelector) {
         case 0:
           calorieActivite = (calorieBase * 1.2).toInt();
           break;
@@ -240,6 +233,7 @@ class _CaloriePageState extends State<CaloriePage> {
       setState(() {
         dialogue();
       });
+
     } else {
       alerte();
     }
@@ -251,14 +245,14 @@ class _CaloriePageState extends State<CaloriePage> {
         barrierDismissible: false,
         builder: (BuildContext buildContext) {
           return new AlertDialog(
-            title: genTextStyle("Erreur"),
-            content: genTextStyle("Tous les champs ne sont pas remplis"),
+            title: gentextWithStyle("Erreur"),
+            content: gentextWithStyle("Tous les champs ne sont pas remplis"),
             actions: <Widget>[
               new FlatButton(
                   onPressed: () {
                     Navigator.pop(buildContext);
                   },
-                  child: genTextStyle("OK", color: Colors.red))
+                  child: gentextWithStyle("OK", color: Colors.red))
             ],
           );
         });
@@ -270,19 +264,19 @@ class _CaloriePageState extends State<CaloriePage> {
         barrierDismissible: false,
         builder: (BuildContext buildContext) {
           return SimpleDialog(
-            title: genTextStyle("Votre besoin en calories", color: setColor()),
+            title: gentextWithStyle("Votre besoin en calories", color: setColor()),
             contentPadding: EdgeInsets.all(15.0),
             children: <Widget>[
               padding(),
-              genTextStyle("Votre besoin de base est de: $calorieBase"),
+              gentextWithStyle("Votre besoin de base est de: $calorieBase"),
               padding(),
-              genTextStyle(
+              gentextWithStyle(
                   "Votre besoin avec activité sportive est de : $calorieActivite"),
               new RaisedButton(
                 onPressed: () {
                   Navigator.pop(buildContext);
                 },
-                child: genTextStyle("OK", color: Colors.white),
+                child: gentextWithStyle("OK", color: Colors.white),
                 color: setColor(),
               )
             ],
