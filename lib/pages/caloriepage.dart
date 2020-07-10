@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async';
-
 import 'package:projet_efficom/authentication_bloc/bloc.dart';
+import 'package:projet_efficom/pages/drawer.dart';
 
 class CaloriePage extends StatefulWidget {
-
   static Route route() {
     return MaterialPageRoute(builder: (_) => CaloriePage());
   }
@@ -25,11 +24,7 @@ class _CaloriePageState extends State<CaloriePage> {
   double yearOld;
   bool sexe = false;
   double size = 170.0;
-  Map mapActivite = {
-    0: "Faible",
-    1: "Modere",
-    2: "Forte"
-  };
+  Map mapActivite = {0: "Faible", 1: "Modere", 2: "Forte"};
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +32,9 @@ class _CaloriePageState extends State<CaloriePage> {
       // permet de quitter le clavier en cliquant en sur l'écran (abs de btn retour sur IOS)
       onTap: (() => FocusScope.of(context).requestFocus(new FocusNode())),
       child: new Scaffold(
+          drawer: AppDrawer(),
           appBar: new AppBar(
-            title: new Text(widget.title),
+            title: new Text('Bienvenue ${widget.title}'),
             centerTitle: true,
             backgroundColor: setColor(),
             actions: <Widget>[
@@ -87,13 +83,14 @@ class _CaloriePageState extends State<CaloriePage> {
                             color: setColor(),
                             child: gentextWithStyle(
                                 (yearOld == null)
-                                    ? "Appuyer pour rentrer votre"
+                                    ? "Appuyer pour rentrer votre âge"
                                     : "Votre age est de : ${yearOld.toInt()} ans",
                                 color: Colors.white),
                             onPressed: (() => showPicker())),
                         // Slider pour la gestion de la taille
                         padding(),
-                        gentextWithStyle("Votre taille est de : ${size.toInt()} cm",
+                        gentextWithStyle(
+                            "Votre taille est de : ${size.toInt()} cm",
                             color: setColor()),
                         padding(),
                         new Slider(
@@ -190,7 +187,6 @@ class _CaloriePageState extends State<CaloriePage> {
               onChanged: (Object i) {
                 setState(() {
                   radioSelector = i;
-
                 });
               }),
           gentextWithStyle(value, color: setColor())
@@ -204,18 +200,23 @@ class _CaloriePageState extends State<CaloriePage> {
     );
   }
 
-
-
-
   void calculNbrCalories() {
     if (yearOld != null && weight != null && radioSelector != null) {
       //Calculer
       if (sexe) {
-        calorieBase = (66.4730 + (13.7516 * weight) + (5.0033 * size) - (6.7550 * yearOld)).toInt();
+        calorieBase = (66.4730 +
+                (13.7516 * weight) +
+                (5.0033 * size) -
+                (6.7550 * yearOld))
+            .toInt();
       } else {
-        calorieBase = (655.0955 + (9.5634 * weight) + (1.8496 * size) - (4.6756 * yearOld)).toInt();
+        calorieBase = (655.0955 +
+                (9.5634 * weight) +
+                (1.8496 * size) -
+                (4.6756 * yearOld))
+            .toInt();
       }
-      switch(radioSelector) {
+      switch (radioSelector) {
         case 0:
           calorieActivite = (calorieBase * 1.2).toInt();
           break;
@@ -233,7 +234,6 @@ class _CaloriePageState extends State<CaloriePage> {
       setState(() {
         dialogue();
       });
-
     } else {
       alerte();
     }
@@ -264,7 +264,8 @@ class _CaloriePageState extends State<CaloriePage> {
         barrierDismissible: false,
         builder: (BuildContext buildContext) {
           return SimpleDialog(
-            title: gentextWithStyle("Votre besoin en calories", color: setColor()),
+            title:
+                gentextWithStyle("Votre besoin en calories", color: setColor()),
             contentPadding: EdgeInsets.all(15.0),
             children: <Widget>[
               padding(),

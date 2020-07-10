@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projet_efficom/pages/caloriepage.dart';
+import 'package:projet_efficom/pages/drawer.dart';
 
 class HomeScreen extends StatelessWidget {
   final String name;
@@ -9,6 +10,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: AppDrawer(),
       body: CaloriePage(title: 'Bienvenue $name',)
     );
   }

@@ -7,10 +7,9 @@ class UserRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
 
-  UserRepository(
-      {FirebaseAuth firebaseAuth,
-      GoogleSignIn googleSignin,
-      FirebaseUser firebaseUser})
+  UserRepository({FirebaseAuth firebaseAuth,
+    GoogleSignIn googleSignin,
+    FirebaseUser firebaseUser})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignin ?? GoogleSignIn(),
         _firebaseUser = firebaseUser ?? firebaseUser;
@@ -19,7 +18,7 @@ class UserRepository {
   Future<FirebaseUser> signInWithGoogle() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
+    await googleUser.authentication;
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
@@ -37,38 +36,18 @@ class UserRepository {
   }
 
   // Create an account
-  // TODO:: Implement more fields than just email and password
-  Future<FirebaseUser> signUp(
-      {String email,
-      String password,
-      String firstname,
-      String lastname}) async {
-    print('Before');
-   // FirebaseUser user = (
-        await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email, password: password);
-    //) as FirebaseUser;
-
-   // print("User $user");
-
-    /*
-    UserUpdateInfo info = new UserUpdateInfo();
-    info.displayName = firstname;
-    _firebaseUser.updateProfile(info);
-
-
-    Firestore.instance.collection('users').document().setData({
-      'firstname': firstname,
-      'lastname': lastname,
-      'email': user.email,
-      'id': user.uid,
-    });
-
-    await user.reload();
-    user = _firebaseAuth.currentUser() as FirebaseUser;
-    print(user);
-
-     */
+  Future<FirebaseUser> signUp({String email,
+    String password,
+    String firstname,
+    String lastname}) async {
+    await _firebaseAuth
+        .createUserWithEmailAndPassword(email: email, password: password)
+        .then((value) =>
+        Firestore.instance.collection('users').add({
+          'id': value.user.uid,
+          'firstname': firstname,
+          'lastname': lastname,
+        }));
   }
 
   // Logout
@@ -83,6 +62,8 @@ class UserRepository {
   }
 
   Future<String> getUser() async {
-    return (await _firebaseAuth.currentUser()).email;
+    var email = (await _firebaseAuth.currentUser()).email;
+    print("email " + email);
+    return email;
   }
 }
