@@ -1,13 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class UserRepository {
+  final FirebaseUser _firebaseUser;
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
 
-  UserRepository({FirebaseAuth firebaseAuth, GoogleSignIn googleSignin})
+  UserRepository(
+      {FirebaseAuth firebaseAuth,
+      GoogleSignIn googleSignin,
+      FirebaseUser firebaseUser})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-        _googleSignIn = googleSignin ?? GoogleSignIn();
+        _googleSignIn = googleSignin ?? GoogleSignIn(),
+        _firebaseUser = firebaseUser ?? firebaseUser;
 
   // Login avec google
   Future<FirebaseUser> signInWithGoogle() async {
@@ -32,9 +38,37 @@ class UserRepository {
 
   // Create an account
   // TODO:: Implement more fields than just email and password
-  Future<void> signUp({String email, String password}) async {
-    return await _firebaseAuth.createUserWithEmailAndPassword(
+  Future<FirebaseUser> signUp(
+      {String email,
+      String password,
+      String firstname,
+      String lastname}) async {
+    print('Before');
+   // FirebaseUser user = (
+        await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
+    //) as FirebaseUser;
+
+   // print("User $user");
+
+    /*
+    UserUpdateInfo info = new UserUpdateInfo();
+    info.displayName = firstname;
+    _firebaseUser.updateProfile(info);
+
+
+    Firestore.instance.collection('users').document().setData({
+      'firstname': firstname,
+      'lastname': lastname,
+      'email': user.email,
+      'id': user.uid,
+    });
+
+    await user.reload();
+    user = _firebaseAuth.currentUser() as FirebaseUser;
+    print(user);
+
+     */
   }
 
   // Logout

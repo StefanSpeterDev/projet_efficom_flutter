@@ -23,6 +23,7 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController _passwordController = TextEditingController();
 
   LoginBloc _loginBloc;
+  bool passwordVisible;
 
   UserRepository get _userRepository => widget._userRepository;
 
@@ -38,6 +39,7 @@ class _LoginFormState extends State<LoginForm> {
   @override
   void initState() {
     super.initState();
+    passwordVisible = true;
     _loginBloc = BlocProvider.of<LoginBloc>(context);
     _emailController.addListener(_onLoginEmailChanged);
     _passwordController.addListener(_onLoginPasswordChanged);
@@ -76,7 +78,8 @@ class _LoginFormState extends State<LoginForm> {
             );
         }
         if (state.isSuccess) {
-          BlocProvider.of<AuthenticationBloc>(context).add(AuthenticationLoggedIn());
+          BlocProvider.of<AuthenticationBloc>(context)
+              .add(AuthenticationLoggedIn());
         }
       },
       child: BlocBuilder<LoginBloc, LoginState>(
@@ -107,9 +110,22 @@ class _LoginFormState extends State<LoginForm> {
                     controller: _passwordController,
                     decoration: InputDecoration(
                       icon: Icon(Icons.lock),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          passwordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.blue,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            passwordVisible = !passwordVisible;
+                          });
+                        },
+                      ),
                       labelText: 'Password',
                     ),
-                    obscureText: true,
+                    obscureText: passwordVisible,
                     autovalidate: true,
                     autocorrect: false,
                     validator: (_) {

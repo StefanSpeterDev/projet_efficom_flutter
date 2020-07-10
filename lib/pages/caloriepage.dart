@@ -1,34 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async';
 
-void main() {
-  runApp(MyApp());
-}
+import 'package:projet_efficom/authentication_bloc/bloc.dart';
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-      // Permet de masquer le bandeau debug
-      debugShowCheckedModeBanner: false,
-      title: 'Calorilator',
-      theme: new ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: new MyHomePage(title: 'Calorilator'),
-    );
+class CaloriePage extends StatefulWidget {
+
+  static Route route() {
+    return MaterialPageRoute(builder: (_) => CaloriePage());
   }
-}
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  CaloriePage({Key key, this.title}) : super(key: key);
   final String title;
 
   @override
-  _MyHomePageState createState() => new _MyHomePageState();
+  _CaloriePageState createState() => new _CaloriePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _CaloriePageState extends State<CaloriePage> {
   int calorieBase;
   int calorieActivite;
   int sportingFrenquency;
@@ -50,7 +39,18 @@ class _MyHomePageState extends State<MyHomePage> {
       child: new Scaffold(
           appBar: new AppBar(
             title: new Text(widget.title),
+            centerTitle: true,
             backgroundColor: setColor(),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.exit_to_app),
+                onPressed: () {
+                  BlocProvider.of<AuthenticationBloc>(context).add(
+                    AuthenticationLoggedOut(),
+                  );
+                },
+              )
+            ],
           ),
           body: new SingleChildScrollView(
               padding: EdgeInsets.all(15.0),
@@ -123,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         genTextStyle("Quelle est votre activité sportive?",
                             color: setColor()),
                         padding(),
-                        rowRadio(),
+                        //rowRadio(),
                         padding()
                       ],
                     ),
